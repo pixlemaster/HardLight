@@ -170,9 +170,6 @@ public abstract partial class SharedBuckleSystem
             BreakOnDamage = true,
             AttemptFrequency = AttemptFrequency.EveryTick
         };
-
-        var popupString = Loc.GetString("hardlight-buckle-strap-attempt-user", ("target", args.User));
-        _popup.PopupEntity(popupString, uid, uid, Popups.PopupType.MediumCaution);
         // Hardlight end
 
         // Add a verb to buckle the user.
