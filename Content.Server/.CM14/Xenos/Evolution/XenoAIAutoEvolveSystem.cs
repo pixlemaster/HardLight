@@ -1,6 +1,8 @@
 using Content.Shared.Actions;
 using Content.Shared.CM14.Xenos;
 using Content.Shared.CM14.Xenos.Evolution;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Timing;
@@ -15,6 +17,7 @@ public sealed class XenoAIAutoEvolveSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
 
     public override void Initialize()
     {
@@ -34,12 +37,16 @@ public sealed class XenoAIAutoEvolveSystem : EntitySystem
         base.Update(frameTime);
 
         var curTime = _timing.CurTime;
-        var query = EntityQueryEnumerator<XenoAIAutoEvolveComponent, XenoComponent, MetaDataComponent>();
+        var query = EntityQueryEnumerator<XenoAIAutoEvolveComponent, XenoComponent, MetaDataComponent, MobStateComponent>();
 
-        while (query.MoveNext(out var uid, out var autoEvolve, out var xeno, out var metaData))
+        while (query.MoveNext(out var uid, out var autoEvolve, out var xeno, out var metaData, out var mobState))
         {
             // Skip player-controlled xenos - only AI xenos should auto-evolve
             if (HasComp<ActorComponent>(uid))
+                continue;
+
+            // Skip dead xenos - they should not evolve
+            if (_mobState.IsDead(uid, mobState))
                 continue;
 
             // Only check at intervals to avoid excessive processing
