@@ -7,10 +7,10 @@
     - type: SolutionContainerManager
       solutions:
         penis:
-          maxVol: 25
+          maxVol: 50
           reagents:
           - ReagentId: Cum
-            Quantity: 25
+            Quantity: 50
 
 - type: trait
   id: MilkProducer
