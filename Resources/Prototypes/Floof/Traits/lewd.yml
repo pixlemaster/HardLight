@@ -1,5 +1,7 @@
 - type: trait
   id: CumProducer
+  name: trait-cum-producer-name
+  description: trait-cum-producer-desc
   category: Physical
   components:
     - type: CumProducer
@@ -7,13 +9,15 @@
     - type: SolutionContainerManager
       solutions:
         penis:
-          maxVol: 25
+          maxVol: 50
           reagents:
           - ReagentId: Cum
-            Quantity: 25
+            Quantity: 50
 
 - type: trait
   id: MilkProducer
+  name: trait-milk-producer-name
+  description: trait-milk-producer-desc
   category: Physical
   components:
     - type: MilkProducer

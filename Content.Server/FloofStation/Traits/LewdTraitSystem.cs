@@ -35,7 +35,7 @@ public sealed class LewdTraitSystem : EntitySystem
 
         //Verbs
         SubscribeLocalEvent<CumProducerComponent, GetVerbsEvent<InnateVerb>>(AddCumVerb);
-        SubscribeLocalEvent<CumProducerComponent, GetVerbsEvent<AlternativeVerb>>(AddCumInsideVerb);
+        SubscribeLocalEvent<RefillableSolutionComponent, GetVerbsEvent<AlternativeVerb>>(AddCumInsideVerb);
         SubscribeLocalEvent<MilkProducerComponent, GetVerbsEvent<InnateVerb>>(AddMilkVerb);
         //SubscribeLocalEvent<SquirtProducerComponent, GetVerbsEvent<InnateVerb>>(AddSquirtVerb); //Unused-Trait is WIP
 
@@ -92,21 +92,19 @@ public sealed class LewdTraitSystem : EntitySystem
         args.Verbs.Add(verbCum);
     }
 
-    public void AddCumInsideVerb(Entity<CumProducerComponent> entity, ref GetVerbsEvent<AlternativeVerb> args)
+    public void AddCumInsideVerb(EntityUid uid, RefillableSolutionComponent component, GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!args.CanInteract ||
-            !HasComp<CumProducerComponent>(args.User) ||
-            !EntityManager.HasComponent<RefillableSolutionComponent>(args.Target))
+        if (!args.CanInteract || !TryComp<CumProducerComponent>(args.User, out var cumProducer))
             return;
 
-        _solutionContainer.EnsureSolution(entity.Owner, entity.Comp.SolutionName);
+        _solutionContainer.EnsureSolution(args.User, cumProducer.SolutionName);
 
         var user = args.User;
-        var target = args.Target;
+        var target = uid;
 
         AlternativeVerb verbCumInside = new()
         {
-            Act = () => AttemptCum(entity, user, target),
+            Act = () => AttemptCum((args.User, cumProducer), user, target),
             Text = Loc.GetString("cum-verb-inside-text"),
             Priority = 2
         };
