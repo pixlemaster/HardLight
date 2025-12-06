@@ -51,6 +51,9 @@
   requirements:
     - !type:CharacterOverallTimeRequirement
       min: 21600 #6 hrs floof
+    - !type:DepartmentTimeRequirement
+      department: Security
+      min: 3600 #1 hrs floof
   canBeAntag: false
   icon: JobIconSecurityBorg
   supervisors: job-supervisors-hos
